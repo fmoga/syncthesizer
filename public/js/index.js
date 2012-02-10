@@ -1,10 +1,4 @@
-var INITIAL_TIMEOUT = 2000; // 1 sec
-var LIMIT_TIMEOUT = 10000; // 10 sec
-var EPSILON = 50; // 50 ms
-var _master = false;
-var timer;
-var timeout;
-var socket;
+var BUFFER = 1000; // 1 min
 
 soundManager.url = '/public/soundManager/swf/';
 soundManager.flashVersion = 9;
@@ -24,32 +18,6 @@ threeSixtyPlayer.onfinish = function() {
   threeSixtyPlayer.lastSound.finished = true;
 }
 
-function setMaster() {
-  document.title = 'master';
-  _master = true;
-  if (timer) clearTimeout(timer);
-  timeout = INITIAL_TIMEOUT;
-  timer = setTimeout(sync, timeout);
-}
-
-function isMaster() {
-  return _master;
-}
-
-function sync() {
-  sendPlayUpdate();
-  timeout = 2 * timeout;
-  if (timeout < LIMIT_TIMEOUT) {
-    timer = setTimeout(sync, timeout);
-  }
-}
-
-function setSlave() {
-  document.title = 'slave';
-  _master = false;
-  if (timer) clearTimeout(timer);
-}
-
 $(document).ready(function() {
   socket = io.connect();
 
@@ -57,15 +25,12 @@ $(document).ready(function() {
   });
 
   socket.on('play', function(data) {
-    if (isMaster() && data.master !== socket.socket.sessionid) {
-      setSlave();
-    }
     if (!threeSixtyPlayer.lastSound || threeSixtyPlayer.lastSound.url !== data.url) {
       loadTrack(data.url);
     }
-    var diff = data.pos - threeSixtyPlayer.lastSound.position;
-    console.log('diff: ' + diff);
-    if (threeSixtyPlayer.lastSound.duration >= data.pos && !(-EPSILON < diff && diff < EPSILON)) {
+    if (threeSixtyPlayer.lastSound.duration + BUFFER < data.pos) {
+      socket.emit('play', data);
+    } else {
       threeSixtyPlayer.lastSound.setPosition(data.pos); 
       if (threeSixtyPlayer.lastSound.paused) {
         threeSixtyPlayer.lastSound.play();
@@ -74,13 +39,14 @@ $(document).ready(function() {
   });
 
   socket.on('pause', function() {
-    setSlave();
-    console.log('pause');
     threeSixtyPlayer.lastSound.pause();
   });
 
   $('li a').click(function() {
-    changeTrack($(this).attr('url'));
+    socket.emit('play', {
+      url: $(this).attr('url'),
+      pos: 0
+    });
   });
 
   function loadTrack(url) { 
@@ -93,11 +59,9 @@ $(document).ready(function() {
     threeSixtyPlayer.init();
     threeSixtyPlayer.handleClick({target:threeSixtyPlayer.links[0],preventDefault:function(){}});
     threeSixtyPlayer.lastSound.options.onposition = function(pos) {
-      setMaster();
       sendPlayUpdate();
     }
     threeSixtyPlayer.lastSound.onplay = function() {
-      setMaster();
       sendPlayUpdate();
     }
     threeSixtyPlayer.lastSound.onpause = function() {
@@ -107,20 +71,10 @@ $(document).ready(function() {
   }
 });
 
-function changeTrack(url) {
-  setMaster();
-  socket.emit('play', {
-    url: url,
-    pos: 0,
-    master: socket.socket.sessionid
-  });
-}
-
 function sendPlayUpdate() {
   socket.emit('play', {
     url: threeSixtyPlayer.lastSound.url,
     pos: threeSixtyPlayer.lastSound.position,
-    master: socket.socket.sessionid
   });
 }
 
