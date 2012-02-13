@@ -3,14 +3,9 @@ extends layout
 block append stylesheets
   link(href='http://fonts.googleapis.com/css?family=Droid+Sans', rel='stylesheet', type='text/css')
   link(href='/public/css/index.css', rel='stylesheet', type='text/css')
-  link(href='/public/soundManager/360player.css', rel='stylesheet', type='text/css')
-  link(href='/public/soundManager/360player-visualization.css', rel='stylesheet', type='text/css')
 
 block append scripts
   script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js');
-  script(type='text/javascript', src='/public/soundManager/soundmanager2-nodebug-jsmin.js')
-  script(type='text/javascript', src='/public/soundManager/berniecode-animator.js')
-  script(type='text/javascript', src='/public/soundManager/360player.js')
   script(src='/socket.io/socket.io.js')
   script(src='/public/js/index.js')
 
@@ -19,7 +14,7 @@ block header
     h3 Syncthesizer
 
 block content
-  div.ui360.ui360-vis
+  audio#player(controls, autoplay)
   ul#songs
     - each file in audioFiles
       li
