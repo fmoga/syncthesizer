@@ -9,6 +9,79 @@ a, a:visited, a:hover {
   color: #00E;
 }
 
+body {
+  width: 400px;
+  margin: auto;
+}
+
+audio {
+  width: 100%;
+}
+
+ul#songs, #nowplaying {
+  list-style-type: none;
+  padding-left: 0;
+  border: 1px solid #BBB;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  word-wrap: break-word;
+}
+
+#songs {
+  margin-top: 240px;
+}
+
+#fixed {
+  position: fixed;
+  top: 0;
+  width: 400px;
+  background-color: white;
+  padding-bottom: 10px;
+}
+
+#nowplaying {
+  margin-bottom: 15px;
+  padding: 3px 5px 3px 5px;
+}
+
+ul#songs li {
+  border-bottom: 1px solid #BBB;
+  padding: 3px 5px 3px 5px;
+}
+
+ul#songs li:last-child {
+  border-bottom: 0;
+}
+
+ul#songs li:hover {
+  background-color: #C3E4ED;
+}
+
+#search {
+  width: 100%;
+  border: 1px solid #BBB;
+  font-size: 16px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+}
+
+.title {
+  font-size: 18px;
+  color: #000;
+}
+
+.artist {
+  font-size: 14px;
+  color: #333;
+}
+
+h3 {
+  color: #777;
+  margin-bottom: 0px;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -22,20 +95,17 @@ a, a:visited, a:hover {
 
 ::-webkit-scrollbar-track  {
   background-color: #F2F2F2;
-  -webkit-border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb:vertical:hover {
   height: 50px;
   background-color: #AAA;
   border: 1px solid #AAA;
-  -webkit-border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb:vertical {
   height: 50px;
   background-color: #CBCBCB;
   border: 1px solid #CBCBCB;
-  -webkit-border-radius: 6px;
 }
 

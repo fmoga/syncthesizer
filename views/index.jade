@@ -9,13 +9,24 @@ block append scripts
   script(src='/socket.io/socket.io.js')
   script(src='/public/js/index.js')
 
-block header
-  #header
-    h3 Syncthesizer
-
 block content
-  audio#player(controls, autoplay)
+  #fixed
+    #header
+      h1 Syncthesizer
+    #nowplaying
+      .title
+        | No song loaded
+      .status
+        | Select song or wait for next sync
+    audio#player(controls, autoplay, loop)
+    h3 Search
+    #searchbox
+      input#search(type='text', autocomplete='off')
   ul#songs
     - each file in audioFiles
       li
-        a(href='#', url='#{file.url}')= file.name
+        a(href='#', url='#{file.url}')
+          .title
+            #{file.title}
+          .artist
+            #{file.artist}

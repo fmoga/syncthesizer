@@ -16,6 +16,7 @@ app.configure(function() {
     key: 'express.sid'
   }));
   app.use(app.router);
+  app.use(express.favicon(__dirname + '/public/images/ldap-sync.png'));
   app.set('view engine', 'jade');
   app.set('view options', {layout: false});
   app.use('/public', express.static(__dirname + '/public'));

@@ -1,3 +1,5 @@
+var PLAYING = 'Now playing';
+var PAUSED = 'Paused';
 var position_requested = false;
 var nextSync;
 
@@ -28,18 +30,22 @@ $(document).ready(function() {
   socket.on('connect', function() {
   });
 
-  socket.on('load', function(url) {
-    console.log('Received load: ' + url);
-    audio.src = url;
+  socket.on('load', function(data) {
+    console.log('Received load: ' + data.url);
+    $('#nowplaying .title').text(data.artist + ' - ' + data.title);
+    $('#nowplaying .status').text(PLAYING);
+    audio.src = data.url;
   });
 
   socket.on('play', function() {
     console.log('Received play');
+    $('#nowplaying .status').text(PLAYING);
     audio.play();
   });
 
   socket.on('pause', function() {
     console.log('Received pause');
+    $('#nowplaying .status').text(PAUSED);
     audio.pause();
   });
 
@@ -64,6 +70,26 @@ $(document).ready(function() {
 
   $('li a').click(function() {
     console.log('Sending load...');
-    socket.emit('load', $(this).attr('url'));
+    socket.emit('load', {
+      url: $(this).attr('url'),
+      artist: $(this).find('.artist').text(),
+      title: $(this).find('.title').text()
+    });
+    return false;
   });
+
+  $('#search').keyup(function() {
+    var searchText = $(this).val().toLowerCase();
+    $('ul#songs li').each(function() {
+      var title = $(this).find('.title').text().toLowerCase();
+      var artist = $(this).find('.artist').text().toLowerCase();
+      if (title.indexOf(searchText) > -1 || artist.indexOf(searchText) > -1) {
+        $(this).show();
+      } else {
+        $(this).hide();
+      }
+    });
+  });
+
+  $('#search').focus();
 });
