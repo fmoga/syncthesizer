@@ -1,5 +1,13 @@
+html, table, .list {
+  height: 100%;
+}
+
+body {
+  height: 99%;
+}
+
 body, input, textarea {
-  font-family: 'Droid Sans', sans-serif;
+  font-family: 'Noticia Text', serif;
   font-size: 14px;
 }
 
@@ -18,7 +26,7 @@ audio {
   width: 100%;
 }
 
-ul#songs, #nowplaying {
+ul#songs {
   list-style-type: none;
   padding-left: 0;
   border: 1px solid #BBB;
@@ -26,23 +34,16 @@ ul#songs, #nowplaying {
   -webkit-border-radius: 5px;
   border-radius: 5px;
   word-wrap: break-word;
-}
-
-#songs {
-  margin-top: 240px;
-}
-
-#fixed {
-  position: fixed;
-  top: 0;
-  width: 400px;
-  background-color: white;
-  padding-bottom: 10px;
+  margin: 0 5px 0 0;
 }
 
 #nowplaying {
   margin-bottom: 15px;
   padding: 3px 5px 3px 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid #BBB;
 }
 
 ul#songs li {
@@ -58,6 +59,12 @@ ul#songs li:hover {
   background-color: #C3E4ED;
 }
 
+.scrollr {
+  overflow-y: scroll;
+  height: 100%;
+  min-height: 100px;
+}
+
 #search {
   width: 100%;
   border: 1px solid #BBB;
@@ -70,11 +77,12 @@ ul#songs li:hover {
 .title {
   font-size: 18px;
   color: #000;
+  font-weight: bold;
 }
 
 .artist {
   font-size: 14px;
-  color: #333;
+  color: black;
 }
 
 h3 {

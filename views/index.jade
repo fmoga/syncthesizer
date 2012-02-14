@@ -1,7 +1,7 @@
 extends layout
 
 block append stylesheets
-  link(href='http://fonts.googleapis.com/css?family=Droid+Sans', rel='stylesheet', type='text/css')
+  link(href='http://fonts.googleapis.com/css?family=Noticia+Text', rel='stylesheet', type='text/css')
   link(href='/public/css/index.css', rel='stylesheet', type='text/css')
 
 block append scripts
@@ -10,23 +10,28 @@ block append scripts
   script(src='/public/js/index.js')
 
 block content
-  #fixed
-    #header
-      h1 Syncthesizer
-    #nowplaying
-      .title
-        | No song loaded
-      .status
-        | Select song or wait for next sync
-    audio#player(controls, autoplay, loop)
-    h3 Search
-    #searchbox
-      input#search(type='text', autocomplete='off')
-  ul#songs
-    - each file in audioFiles
-      li
-        a(href='#', url='#{file.url}')
-          .title
-            #{file.title}
-          .artist
-            #{file.artist}
+  table
+    tr
+      td
+          #header
+            h1 Syncthesizer
+          #nowplaying
+            .title
+              | No song loaded
+            .status
+              | Select song or wait for next sync
+          audio#player(controls, autoplay, loop)
+          h3 Search
+          #searchbox
+            input#search(type='text', autocomplete='off')
+    tr
+      td.list
+        div.scrollr
+          ul#songs
+            - each file in audioFiles
+              li
+                a(href='#', url='#{file.url}')
+                  .title
+                    #{file.title}
+                  .artist
+                    #{file.artist}
