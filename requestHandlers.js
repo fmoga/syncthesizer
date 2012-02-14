@@ -2,7 +2,7 @@ var util = require('util'),
     exec = require('child_process').exec;
 
 function index(req, res) {
-  exec('find public/audio -type f', function(err, stdout, stderr) {
+  exec('find -L public/audio -type f', function(err, stdout, stderr) {
     var files = stdout.split('\n');
     files = files.filter(function(x) { return x !== ''; });
     var audioFiles = [];
