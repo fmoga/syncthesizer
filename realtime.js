@@ -7,6 +7,10 @@ var io = require('socket.io'),
 var online = {};
 var PING_INTERVAL = 5000; // 5 sec
 var SYNC_TIMEOUT = 2000; // 2 sec
+var SYNC_POINTS = [1000, 3000, 3000, 3000];
+var syncIndex = 0;
+var syncPosition = 0;
+var syncPromise;
 
 function broadcast(type, body) {
   for (id in online) {
@@ -18,17 +22,40 @@ function broadcast(type, body) {
   }
 }
 
-function scheduleSync(pos) {
+function startSync(pos) {
+  stopSync();
+  syncIndex = -1;
+  syncPosition = pos;
+  scheduleSync();
+}
+
+function scheduleSync() {
+  syncIndex++;
+  if (syncIndex == SYNC_POINTS.length) 
+    return;
+  syncPosition += SYNC_POINTS[syncIndex] / 1000;
+  stopSync();
+  syncPromise = setTimeout(function() {
+    sendSync();
+  }, SYNC_POINTS[syncIndex]);
+}
+
+function sendSync() {
   for (id in online) {
     avg_latency = 0;
     if (online[id].pings) {
       avg_latency = online[id].latency / (2 * online[id].pings);
     }
     online[id].emit('sync', {
-      pos: pos + SYNC_TIMEOUT / 1000,
+      pos: syncPosition + SYNC_TIMEOUT / 1000,
       timeout: SYNC_TIMEOUT - avg_latency
     });
   }
+  scheduleSync();
+}
+
+function stopSync() {
+  clearTimeout(syncPromise);
 }
 
 setInterval(function() {
@@ -74,24 +101,25 @@ function init(app, sessionStore) {
     socket.on('play', function(pos) {
       console.log('Broadcasting play');
       broadcast('play');
-      scheduleSync(pos);
+      startSync(pos);
     });
 
     socket.on('pause', function() {
       console.log('Broadcasting pause');
+      stopSync();
       broadcast('pause');
     });
 
     socket.on('load', function(url) {
       console.log('Broadcasting load of ' + url);
       broadcast('load', url);
-      scheduleSync(0);
+      startSync(0);
     });
 
     socket.on('position', function(pos) {
       console.log('Broadcasting new position of ' + pos);
       broadcast('position', pos);
-      scheduleSync(pos);
+      startSync(pos);
     });    
 
     socket.on('pong', function(ts) {
