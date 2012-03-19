@@ -1,8 +1,0 @@
-Sync multiple browsers while playing audio files.
-
-Place audio files in /public/audio.
-
-For Ubuntu sloppy sound, add tsched=0 in /etc/pulse/default.pa on line:
-  load-module module-udev-detect tsched=0
-
-Reference: http://askubuntu.com/questions/6655/choppy-audio-video-playback-experience

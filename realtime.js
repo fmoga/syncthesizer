@@ -7,7 +7,7 @@ var io = require('socket.io'),
 var online = {};
 var PING_INTERVAL = 5000; // 5 sec
 var SYNC_TIMEOUT = 2000; // 2 sec
-var SYNC_POINTS = [1000, 3000, 3000, 3000];
+var SYNC_POINTS = [0];
 var syncIndex = 0;
 var syncPosition = 0;
 var syncPromise;
